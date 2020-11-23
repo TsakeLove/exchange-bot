@@ -1,1 +1,1 @@
-exchange-bot
+currency-bot
