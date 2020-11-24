@@ -1,8 +1,8 @@
 const TelegramBot = require("node-telegram-bot-api");
-const config = require('./scr/config');
-const helper = require('./scr/helper');
-const kb = require('./scr/keyboard-buttons');
-const keyboard = require('./scr/keyboard');
+const config = require('./src/config');
+const helper = require('./src/helper');
+const kb = require('./src/keyboard-buttons');
+const keyboard = require('./src/keyboard');
 let chatID;
 let currency;
 const TOKEN = config.TOKEN;
