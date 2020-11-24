@@ -1,12 +1,12 @@
 const TelegramBot = require("node-telegram-bot-api");
-const config = require('./src/config');
+//const config = require('./src/config');
 const helper = require('./src/helper');
 const kb = require('./src/keyboard-buttons');
 const keyboard = require('./src/keyboard');
 let chatID;
 let currency;
-const TOKEN = config.TOKEN;
-const bot = new TelegramBot(TOKEN || process.env.TOKEN, {
+//const TOKEN = config.TOKEN;
+const bot = new TelegramBot(process.env.TOKEN, {
     polling: true
 })
 bot.on ('message', msg => {
