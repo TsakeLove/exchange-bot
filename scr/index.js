@@ -5,6 +5,7 @@ const kb = require('./keyboard-buttons');
 const keyboard = require('./keyboard');
 let chatID;
 let currency;
+const TOKEN = config.TOKEN || process.env.TOKEN
 const bot = new TelegramBot(config.TOKEN, {
     polling: true
 })
