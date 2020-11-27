@@ -5,7 +5,13 @@ module.exports = {
     ],
     afterTop: [
         [kb.afterTop.all],
-        [kb.back]
+        [kb.back], [kb.afterTop.favorite]
         ],
+    back: [
+        [kb.back]
+    ],
+    add: [
+        [kb.add], [kb.back], [kb.afterTop.favorite]
+    ]
 
 }
