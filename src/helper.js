@@ -1,6 +1,7 @@
 const getList = require('./minfin');
 const dbFun = require('../db/index');
 let banksVsCurr = [];
+let listOfBankk = [];
 module.exports = {
     getChatId(msg) {
         return msg.chat.id
@@ -9,6 +10,7 @@ module.exports = {
     {
         const result = await getList(currency);
      //   banksVsCurr = result;
+        listOfBankk = result;
         return result;
     },
     getHTML (listOfBank)
@@ -17,21 +19,7 @@ module.exports = {
             return `<b>${listOfBank[i].name}</b> : ${listOfBank[i].price_buy} / ${listOfBank[i].price_sale}`
         }).join('\n');
     },
-    // isInList(nameBank,currency)
-    // {
-    //     console.log('User want to add ' + nameBank);
-    //     let listOfBank = this.listOfBank(currency);
-    //     let found = listOfBank.then(banks=>{
-    //         banks.some(el=>{
-    //             console.log('We found: '+found);
-    //            // return el.name_bank == nameBank;
-    //         })
-    //     })
-    //
-    //     if(!found) return false;
-    //     else return true;
-    //
-    // },
+
     getTopBanks(listOfBank)
     {
         let listTopBank = [];
@@ -46,18 +34,18 @@ module.exports = {
         ];
        listOfBank.filter(function (bank) {
             topBanks.forEach(i=>{
-                if (bank.name == i) listTopBank.push(bank)
+                if (bank.name === i) listTopBank.push(bank)
             })
 
         })
 
         return listTopBank;
     },
-    async isInList (bankName)
+    async isInListOfAllBanks (bankName)
     {
         bankName = bankName.toLowerCase();
         console.log(bankName);
-        if ((bankName =="а банк") || (bankName == 'а-банк')) return 'А-Банк';
+        if ((bankName ==="а банк") || (bankName === 'а-банк')) return 'А-Банк';
         else {
         let result = await dbFun.getNameBanks(bankName);
         if(result[0]) {
@@ -83,25 +71,149 @@ module.exports = {
 
          listBanks.filter(function (bank) {
              listName.forEach(i=>{
-                 if (bank.name == i) result.push(bank);
+                 if (bank.name === i) result.push(bank);
              })
          })
 
         console.log('Now i want to return');
-         banksVsCurr = result;
+
         return result;
     },
    async addFavorite (chatID,nameBank)
     {
-        const some = {chat_id: chatID, name_bank: nameBank}
-        let isInFavorite = await dbFun.isInFavorite(nameBank);
-        console.log(isInFavorite )
+        const some = {chat_id: chatID, name_bank: nameBank};
+        let isInFavorite = await dbFun.isInFavorite(chatID,nameBank);
         if (isInFavorite.length>0) return false;
         else {
             await dbFun.addBankToFavorite(some);
             return true;
         }
 
+    },
+    async deleteBankFromFavorite (chatID,nameBank)
+    {
+        let isInFavorite = await dbFun.isInFavorite(chatID,nameBank);
+        if (isInFavorite.length>0)
+        {
+            await dbFun.deleteBank(nameBank);
+            return true;
+        }
+        else return false;
+
+    },
+    getHtmlForCaculate (listOfBanks)
+    {
+        return listOfBanks.map((b,i)=>{
+            return `<b>${listOfBanks[i].name}</b> : ${listOfBanks[i].curr_buy} grn`
+        }).join(('\n'));
+    },
+   async calculateFavoriteBuy (chatId,currency,sum)
+    {
+        let listWithCurr = [];
+        let listFavorite = await this.getFavorite(chatId,currency)
+        for (let bank in listFavorite)
+        {
+            let bankWithCurr = {};
+            bankWithCurr.curr_buy =  Number(listFavorite[bank].price_buy) * sum;
+            bankWithCurr.curr_buy = bankWithCurr.curr_buy.toFixed(3);
+            bankWithCurr.name = listFavorite[bank].name;
+            listWithCurr.push(bankWithCurr);
+
+        }
+        return listWithCurr;
+    },
+    async calculateFavoriteSell (chatId,currency,sum)
+    {
+        let listWithCurr = [];
+        let listFavorite = await this.getFavorite(chatId,currency)
+        for (let bank in listFavorite)
+        {
+            let bankWithCurr = {};
+            bankWithCurr.curr_buy =sum/Number(listFavorite[bank].price_buy);
+            bankWithCurr.curr_buy = bankWithCurr.curr_buy.toFixed(3);
+            bankWithCurr.name = listFavorite[bank].name;
+            listWithCurr.push(bankWithCurr);
+
+        }
+        return listWithCurr;
+    },
+   async calculateMyselfBunkBuy (bank_name,currency,sum)
+    {
+
+        let listWithCurr = [];
+
+        let bankWithCurr = {};
+        let isIn = await this.isInListOfAllBanks(bank_name);
+        if (isIn.length >= 1){
+            console.log(isIn);
+            listOfBankk.filter(bank=>{
+
+                if (bank.name === isIn) {
+                    bankWithCurr.name = isIn;
+                    bankWithCurr.curr_buy = Number(bank.price_buy) * sum;
+                    bankWithCurr.curr_buy = bankWithCurr.curr_buy.toFixed(3);
+                }
+            })
+            listWithCurr.push(bankWithCurr);
+            return listWithCurr;
+        }
+        else return 0;
+
+
+    },
+    async calculateMyselfBunkSell (bank_name,currency,sum)
+    {
+
+        let listWithCurr = [];
+
+        let bankWithCurr = {};
+        let isIn = await this.isInListOfAllBanks(bank_name);
+        if (isIn.length >= 1){
+            console.log(isIn);
+            listOfBankk.filter(bank=>{
+
+                if (bank.name === isIn) {
+                    bankWithCurr.name = isIn;
+                    bankWithCurr.curr_buy =  sum/Number(bank.price_buy);
+                    bankWithCurr.curr_buy = bankWithCurr.curr_buy.toFixed(3);
+                }
+            })
+            listWithCurr.push(bankWithCurr);
+            return listWithCurr;
+        }
+        else return 0;
+
+
+    },
+    async calculateTopBankBuy(sum)
+    {
+        let listWithCurr = [];
+
+        let listTopBanks = await this.getTopBanks(listOfBankk);
+        for (let bank in listTopBanks)
+        {
+            let bankWithCurr = {};
+            bankWithCurr.curr_buy = (Number(listTopBanks[bank].price_buy)*sum)
+            bankWithCurr.curr_buy = bankWithCurr.curr_buy.toFixed(3);
+            bankWithCurr.name = listTopBanks[bank].name;
+            listWithCurr.push(bankWithCurr)
+        }
+        return listWithCurr;
+    },
+    async calculateTopBankSell (sum)
+    {
+        let listWithCurr = [];
+
+        let listTopBanks = await this.getTopBanks(listOfBankk);
+        for (let bank in listTopBanks)
+        {
+            let bankWithCurr = {};
+            bankWithCurr.curr_buy = sum/(Number(listTopBanks[bank].price_buy))
+            bankWithCurr.curr_buy = bankWithCurr.curr_buy.toFixed(3);
+            bankWithCurr.name = listTopBanks[bank].name;
+            listWithCurr.push(bankWithCurr)
+        }
+        return listWithCurr;
     }
 
 }

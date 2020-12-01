@@ -17,9 +17,13 @@ module.exports = {
     {
         return knex.select("name_bank").from("favorite").where("chat_id",chatID).then()
     },
-    isInFavorite: function(bankName)
+    isInFavorite: function(chatID,bankName)
     {
-        return knex.select('name_bank').from('favorite').where("name_bank",bankName).then()
+        return knex.select('name_bank').from('favorite').where("name_bank",bankName).andWhere("chat_id",chatID).then()
+    },
+    deleteBank: function(bankName)
+    {
+       return knex('favorite').where('name_bank',bankName).del().then()
     },
 
 
