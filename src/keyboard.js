@@ -1,3 +1,4 @@
+'use strict';
 const kb = require('./keyboard-buttons');
 module.exports = {
     home: [

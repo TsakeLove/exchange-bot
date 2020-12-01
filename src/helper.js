@@ -1,3 +1,4 @@
+'use strict';
 const getList = require('./minfin');
 const dbFun = require('../db/index');
 let banksVsCurr = [];
