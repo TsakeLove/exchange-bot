@@ -46,6 +46,8 @@ module.exports = {
         bankName = bankName.toLowerCase();
         console.log(bankName);
         if ((bankName ==="а банк") || (bankName === 'а-банк')) return 'А-Банк';
+        if ((bankName === "полтава банк") || (bankName === "полтава-банк"))  return 'Полтава-Банк';
+        if ((bankName === "траст капитал") || (bankName === "траст-капитал"))  return 'Траст-капитал';
         else {
         let result = await dbFun.getNameBanks(bankName);
         if(result[0]) {
