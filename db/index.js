@@ -1,5 +1,6 @@
 'use strict'
-const cfg = require('./config').pg;
+//const cfg = require('./config').pg;
+const cfg = require('./dpconfig').pg
 const knex = require('knex')(cfg);
 const Promise = require('bluebird');
 module.exports = {
