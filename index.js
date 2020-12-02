@@ -10,11 +10,10 @@ let sum;
 let direction;
 //const TOKEN = config.TOKEN;
 const bot = new TelegramBot(process.env.TOKEN, {
-    polling: true
+    polling: true,
 })
 let answerCallbacks = {};
 
-bot.openWebHook(process.env.WEBHOOK_ADDRESS);
 bot.on ('message', msg => {
     chatID = helper.getChatId(msg);
     let callback = answerCallbacks[chatID];
