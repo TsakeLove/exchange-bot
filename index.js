@@ -14,7 +14,7 @@ const bot = new TelegramBot(process.env.TOKEN, {
 })
 let answerCallbacks = {};
 
-
+bot.openWebHook(process.env.WEBHOOK_ADDRESS);
 bot.on ('message', msg => {
     chatID = helper.getChatId(msg);
     let callback = answerCallbacks[chatID];
