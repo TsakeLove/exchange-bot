@@ -22,8 +22,5 @@
   "devDependencies": {
     "bluebird": "^3.7.2",
     "treeize": "^2.1.2"
-  },
-  "engines": {
-    "node": "10.17.0"
   }
 }
