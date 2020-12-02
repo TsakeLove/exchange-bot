@@ -22,5 +22,8 @@
   "devDependencies": {
     "bluebird": "^3.7.2",
     "treeize": "^2.1.2"
+  },
+  "engines": {
+    "npm": "6.4.1"
   }
 }
